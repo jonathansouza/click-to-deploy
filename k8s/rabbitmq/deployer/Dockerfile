@@ -33,5 +33,15 @@ COPY --from=build /tmp/test/rabbitmq.tar.gz /data-test/chart/
 COPY --from=build /tmp/apptest/schema.yaml /data-test/
 COPY --from=build /tmp/schema.yaml /data/
 
+RUN apt-get update && \
+apt-get install -y curl unzip
+
+RUN curl https://dl.bintray.com/rabbitmq/community-plugins/3.8.x/rabbitmq_delayed_message_exchange/rabbitmq_delayed_message_exchange-20191008-3.8.x.zip && \
+unzip rabbitmq_delayed_message_exchange-20171201-3.7.x.zip && \
+rm -f rabbitmq_delayed_message_exchange-20171201-3.7.x.zip && \
+mv rabbitmq_delayed_message_exchange-20171201-3.7.x.ez plugins/
+
+RUN rabbitmq-plugins enable rabbitmq_delayed_message_exchange
+
 ENV WAIT_FOR_READY_TIMEOUT 600
 ENV TESTER_TIMEOUT 600
